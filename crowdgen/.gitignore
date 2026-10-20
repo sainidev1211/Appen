@@ -8,3 +8,7 @@ __pycache__/
 .ruff_cache/
 dist/
 build/
+openrouter_keys.txt
+instances.py
+.chrome-debug/
+.caption_cache.json

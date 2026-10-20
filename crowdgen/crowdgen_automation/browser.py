@@ -24,8 +24,8 @@ def is_cdp_available(port: int = 9222) -> bool:
 
 def get_chrome_debug_dir() -> Path:
     """Return persistent user data path for dedicated Chrome debug session."""
-    user_profile = os.environ.get("USERPROFILE", "")
-    p = Path(user_profile) / ".chrome-debug"
+    base = os.environ.get("USERPROFILE") or os.environ.get("HOME") or str(Path.home())
+    p = Path(base) / ".chrome-debug"
     p.mkdir(parents=True, exist_ok=True)
     return p
 
@@ -51,6 +51,6 @@ def acquire_browser_session(
     context = p.chromium.launch_persistent_context(
         user_data_dir=str(user_dir), channel="chrome", headless=inst.headless,
         viewport={"width": 1400, "height": 900},
-        args=["--profile-directory=Default", "--disable-blink-features=AutomationControlled"],
+        args=["--disable-blink-features=AutomationControlled"],
     )
     return context, context.pages[0] if context.pages else context.new_page(), False

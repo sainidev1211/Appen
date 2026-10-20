@@ -54,8 +54,9 @@ def test_submit_task_auto_submit_success() -> None:
         return loc
 
     mock_ctx.locator.side_effect = locator_side_effect
-    with patch("crowdgen_automation.tasks.submit.wait_for_target_timer"):
-        res = submit_task(mock_ctx, start_time=0.0, auto_submit=True, target_remaining_sec=130)
+    with patch("crowdgen_automation.tasks.submit.wait_for_target_timer") as mock_wait:
+        res = submit_task(mock_ctx, start_time=0.0, auto_submit=True, target_remaining_sec=0)
         assert res is True
+        mock_wait.assert_not_called()
         mock_sub.click.assert_called_once()
         mock_conf.click.assert_called_once()

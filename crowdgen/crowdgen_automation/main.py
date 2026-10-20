@@ -45,10 +45,7 @@ def run(instances_path: str = "instances.py") -> None:
     with keep_awake(), ThreadPoolExecutor(max_workers=max(1, len(instances))) as ex:
         futs = [ex.submit(run_instance, inst) for inst in instances]
         for fut in as_completed(futs):
-            try:
-                fut.result()
-            except (Error, OSError, RuntimeError, TimeoutError) as exc:
-                logger.error("Instance failed: %s", exc)
+            fut.result()
 
 
 if __name__ == "__main__":

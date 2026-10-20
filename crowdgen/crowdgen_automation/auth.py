@@ -29,7 +29,7 @@ def launch_project(page: Page) -> None:
         if "/annotate/" in page.url:
             return
         btn = page.locator('button:has-text("Start"), a:has-text("Start")').first
-        if btn.is_visible(timeout=1000):
+        if btn.is_visible(timeout=1000) and btn.is_enabled():
             btn.click()
             page.wait_for_load_state("domcontentloaded")
             logger.info("Clicked 'Start'. Waiting 15s for image and task to load...")

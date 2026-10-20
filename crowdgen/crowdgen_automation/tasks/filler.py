@@ -22,9 +22,9 @@ def _fill_text(loc: Locator, text: str, name: str) -> None:
     loc.scroll_into_view_if_needed()
     loc.click()
     loc.fill("")
-    loc.press_sequentially(text, delay=65, timeout=90000)
-    logger.info("Filled %s slowly (%d chars).", name, len(text))
-    time.sleep(1.5)
+    loc.press_sequentially(text, delay=25, timeout=45000)
+    logger.info("Filled %s (%d chars).", name, len(text))
+    time.sleep(0.5)
 
 
 def fill_maven_form(context: Page | FrameLocator, captions: dict[str, str]) -> None:

@@ -28,7 +28,7 @@ def click_validate(context: Page | FrameLocator) -> tuple[bool, str | None]:
     except (Error, TimeoutError):
         pass
     time.sleep(1.0)
-    for _ in range(12):
+    for _ in range(25):
         err_loc = context.locator(ERR_SEL).first
         if err_loc.is_visible():
             err_msg = err_loc.inner_text().strip()

@@ -50,7 +50,7 @@ sequenceDiagram
 - `crowdgen_automation/tasks/key_pool.py`: Multi-key rotation and dynamic cooldown management for OpenRouter API keys.
 - `crowdgen_automation/tasks/filler.py`: Slow humanized character-by-character typing with delay pacing into caption fields.
 - `crowdgen_automation/tasks/validator.py`: "Validate" button trigger, success alert detection, and DOM error message parser.
-- `crowdgen_automation/tasks/submit.py`: Live countdown timer monitoring (waits until <= 2:45 ~ 2:55 remaining) and submission.
+- `crowdgen_automation/tasks/submit.py`: Direct submission trigger, confirmation modal handling, and optional countdown timer monitoring.
 - `crowdgen_automation/tasks/unit_loader.py`: Unit transition tracker and automated page reload polling on empty task queues.
 - `crowdgen_automation/tasks/caption_cache.py`: Persistent disk and in-memory cache remembering last generated captions across crashes/retries.
 - `crowdgen_automation/tasks/coordinator.py`: Task processing lifecycle loop with auto-recovery and self-healing retry coordinator.

@@ -18,7 +18,7 @@ def test_instance_validation_success() -> None:
     cfg = inst.to_settings()
     assert cfg.max_tasks == 50
     assert cfg.aht_min_wait_sec == 30
-    assert cfg.target_remaining_sec == 170
+    assert cfg.target_remaining_sec == 0
 
 
 def test_instance_validation_empty_credentials() -> None:

@@ -1,5 +1,4 @@
-"""Submission and timer controller for Project Origami / Maven tasks."""
-
+import contextlib
 import logging
 import random
 import time
@@ -11,11 +10,10 @@ JS_TIMER = "() => { const el = Array.from(document.querySelectorAll('*')).revers
 
 
 def get_page_remaining_seconds(page: Page) -> int | None:
-    try:
+    with contextlib.suppress(Error, TypeError, ValueError, RuntimeError):
         val = page.evaluate(JS_TIMER)
         return int(val) if isinstance(val, (int, float)) else None
-    except (Error, TypeError, ValueError, RuntimeError):
-        return None
+    return None
 
 
 def _find_submit_btn(context: Page | FrameLocator, page: Page | None) -> Locator | None:
@@ -31,7 +29,9 @@ def _find_submit_btn(context: Page | FrameLocator, page: Page | None) -> Locator
     return None
 
 
-def wait_for_target_timer(page: Page | None, start_time: float, target_remaining_sec: int = 170) -> None:
+def wait_for_target_timer(page: Page | None, start_time: float, target_remaining_sec: int = 0) -> None:
+    if target_remaining_sec <= 0:
+        return
     while True:
         rem = get_page_remaining_seconds(page) if page else None
         rem = max(0, 300 - int(time.monotonic() - start_time)) if rem is None else rem
@@ -42,12 +42,13 @@ def wait_for_target_timer(page: Page | None, start_time: float, target_remaining
         time.sleep(min(rem - target_remaining_sec, 5))
 
 
-def submit_task(context: Page | FrameLocator, start_time: float, auto_submit: bool = True, target_remaining_sec: int = 170, page: Page | None = None) -> bool:
+def submit_task(context: Page | FrameLocator, start_time: float, auto_submit: bool = True, target_remaining_sec: int = 0, page: Page | None = None) -> bool:
     if not auto_submit:
         logger.info("Review mode: Captions filled & validated. Please submit.")
         return True
-    target = random.randint(165, 175) if target_remaining_sec == 170 else target_remaining_sec
-    wait_for_target_timer(page or (context if isinstance(context, Page) else None), start_time, target)
+    if target_remaining_sec > 0:
+        target = random.randint(target_remaining_sec - 5, target_remaining_sec + 5)
+        wait_for_target_timer(page or (context if isinstance(context, Page) else None), start_time, target)
     if not (sub_btn := _find_submit_btn(context, page)):
         logger.warning("Submit button not found.")
         return False
