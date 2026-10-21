@@ -33,13 +33,15 @@ def generate_captions(img_ref: str, cfg: Settings, error_feedback: str | None = 
     if not error_feedback and (cached := caption_cache.get_cached_caption(img_ref)):
         return cached
     if gk := cfg.gemini_api_key:
-        try:
-            res = _call_model("", gk, cfg.gemini_model, img_ref, error_feedback, is_gemini=True)
-            caption_cache.save_cached_caption(img_ref, res)
-            return res
-        except requests.RequestException:
-            if not cfg.openrouter_api_key and not key_pool.load_keys():
-                raise
+        for m in (cfg.gemini_model, "gemini-3-flash-preview", "gemini-3.5-flash"):
+            try:
+                res = _call_model("", gk, m, img_ref, error_feedback, is_gemini=True)
+                caption_cache.save_cached_caption(img_ref, res)
+                return res
+            except requests.RequestException:
+                continue
+        if not cfg.openrouter_api_key and not key_pool.load_keys():
+            raise RuntimeError("Gemini models failed and no OpenRouter keys configured.")
     keys = key_pool.load_keys(extra_keys=[cfg.openrouter_api_key] if cfg.openrouter_api_key else None)
     while key := key_pool.get_active_key(keys):
         try:
