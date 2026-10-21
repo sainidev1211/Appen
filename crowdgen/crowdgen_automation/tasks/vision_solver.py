@@ -33,7 +33,7 @@ def generate_captions(img_ref: str, cfg: Settings, error_feedback: str | None = 
     if not error_feedback and (cached := caption_cache.get_cached_caption(img_ref)):
         return cached
     if gk := cfg.gemini_api_key:
-        for m in (cfg.gemini_model, "gemini-3-flash-preview", "gemini-3.5-flash"):
+        for m in (cfg.gemini_model, "gemini-flash-lite-latest", "gemini-3.1-flash-lite", "gemini-3-flash-preview", "gemini-3.5-flash"):
             try:
                 res = _call_model("", gk, m, img_ref, error_feedback, is_gemini=True)
                 caption_cache.save_cached_caption(img_ref, res)
