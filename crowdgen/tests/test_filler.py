@@ -43,13 +43,13 @@ def test_fill_maven_form_fills_all_fields() -> None:
 
     mock_no_issue.click.assert_called_once()
     mock_detailed.press_sequentially.assert_called_with(
-        "Detailed description with over twenty five words.", delay=65, timeout=90000
+        "Detailed description with over twenty five words.", delay=25, timeout=45000
     )
     mock_short.press_sequentially.assert_called_with(
-        "A concise short sentence.", delay=65, timeout=90000
+        "A concise short sentence.", delay=25, timeout=45000
     )
     mock_angle.press_sequentially.assert_called_with(
-        "low-angle view", delay=65, timeout=90000
+        "low-angle view", delay=25, timeout=45000
     )
 
 

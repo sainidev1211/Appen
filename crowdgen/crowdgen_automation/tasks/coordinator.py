@@ -49,7 +49,8 @@ def process_maven_tasks(page: pw.Page, cfg: Settings, auto_submit: bool = True) 
         try:
             ok = process_single_task(page, cfg, auto_submit=auto_submit)
         except (pw.Error, RetryError, TimeoutError, ValueError, RuntimeError, OSError) as exc:
-            logger.warning("Task error: %s", exc)
+            err = exc.last_attempt.exception() if isinstance(exc, RetryError) and exc.last_attempt else exc
+            logger.warning("Task error: %s", err)
             ok = False
         if not ok:
             page.reload()

@@ -15,7 +15,6 @@ def get_page_remaining_seconds(page: Page) -> int | None:
         return int(val) if isinstance(val, (int, float)) else None
     return None
 
-
 def _find_submit_btn(context: Page | FrameLocator, page: Page | None) -> Locator | None:
     for tgt in ([context, page] if page and page != context else [context]):
         for sel in ('button:has-text("Submit")', 'button[type="submit"]', 'input[value="Submit"]'):
@@ -28,7 +27,6 @@ def _find_submit_btn(context: Page | FrameLocator, page: Page | None) -> Locator
                 pass
     return None
 
-
 def wait_for_target_timer(page: Page | None, start_time: float, target_remaining_sec: int = 0) -> None:
     if target_remaining_sec <= 0:
         return
@@ -40,8 +38,6 @@ def wait_for_target_timer(page: Page | None, start_time: float, target_remaining
             break
         logger.info("Timer: %d:%02d remaining (target: %d:%02d)...", rem // 60, rem % 60, target_remaining_sec // 60, target_remaining_sec % 60)
         time.sleep(min(rem - target_remaining_sec, 5))
-
-
 def submit_task(context: Page | FrameLocator, start_time: float, auto_submit: bool = True, target_remaining_sec: int = 0, page: Page | None = None) -> bool:
     if not auto_submit:
         logger.info("Review mode: Captions filled & validated. Please submit.")
@@ -52,8 +48,11 @@ def submit_task(context: Page | FrameLocator, start_time: float, auto_submit: bo
     if not (sub_btn := _find_submit_btn(context, page)):
         logger.warning("Submit button not found.")
         return False
+    logger.info("Waiting 20 seconds before submitting...")
+    time.sleep(20)
     sub_btn.click()
     if (conf := (page or context).locator('button:has-text("Yes, submit"), button:has-text("Confirm")').first).is_visible():
         conf.click()
     logger.info("Task submitted successfully!")
     return True
+
